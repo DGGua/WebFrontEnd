@@ -2,6 +2,7 @@ import { Button, DatePicker, Input } from "antd";
 import moment from "moment";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserService } from "../services/userService";
 import "./ForgetPage.scss";
 export default function ForgetPage() {
   const [id, setId] = useState("");
@@ -9,14 +10,19 @@ export default function ForgetPage() {
   const [passwordRepeat, setPasswordRepeat] = useState("");
   const [date, setDate] = useState(moment());
   const navigate = useNavigate();
-  const CheckChange = () => {
+  const CheckChange = async () => {
     if (id.length == 0) {
       alert("id cannot be empty");
     } else if (password != passwordRepeat) {
       alert("password is not equal to passwordRepeat");
     } else {
-      alert("configure completed");
-      navigate("/");
+      const res = await UserService.update(id, password);
+      if (res.status == 200) {
+        alert("configure completed");
+        navigate("/");
+      } else {
+        alert("configure failed");
+      }
     }
   };
 

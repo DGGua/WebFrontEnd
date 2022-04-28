@@ -1,13 +1,15 @@
 import { Button, Input } from "antd";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserService } from "../services/userService";
 import "./LoginPage.scss";
 export default function LoginPage() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const CheckLogin = () => {
-    if (id === "123" && password === "123") {
+  const checkLogin = async () => {
+    const res = await UserService.login(id, password);
+    if (res.status == 200) {
       navigate("/main");
     } else {
       alert("用户名或密码错误");
@@ -44,7 +46,7 @@ export default function LoginPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           ></Input>
-          <Button size="large" block type="primary" onClick={CheckLogin}>
+          <Button size="large" block type="primary" onClick={checkLogin}>
             登录
           </Button>
         </div>

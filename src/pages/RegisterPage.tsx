@@ -2,14 +2,15 @@ import { Button, DatePicker, Input } from "antd";
 import moment from "moment";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserService } from "../services/userService";
 import "./RegisterPage.scss";
 export default function RegisterPage() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [date, setDate] = useState(moment());
+  const [date, setDate] = useState<moment.Moment | null>(moment());
   const navigate = useNavigate();
-  const CheckRegister = () => {
+  const CheckRegister = async () => {
     if (id.length == 0) {
       alert("id 不能为空");
     } else if (password.length < 8) {
@@ -17,8 +18,18 @@ export default function RegisterPage() {
     } else if (email.indexOf("@") == -1) {
       alert("email is not valid");
     } else {
-      alert("register completed");
-      navigate("/");
+      const res = await UserService.register(
+        id,
+        password,
+        email,
+        date ?? undefined
+      );
+      if (res.status == 200) {
+        alert("register success");
+        navigate("/");
+      } else {
+        alert("register error");
+      }
     }
   };
 
@@ -49,7 +60,7 @@ export default function RegisterPage() {
         <DatePicker
           placeholder="请选择日期"
           value={date}
-          onChange={(moment) => setDate(moment!)}
+          onChange={(moment) => setDate(moment)}
           size="large"
           style={{ width: "100%" }}
         ></DatePicker>
