@@ -53,7 +53,6 @@ export default function RegisterPage() {
         <Input
           placeholder="电子邮箱"
           size="large"
-          type="password"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         ></Input>

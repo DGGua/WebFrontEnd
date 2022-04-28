@@ -1,8 +1,9 @@
-import { Button, Form, Input, Modal } from "antd";
+import { Button, Form, Input, InputNumber, Modal } from "antd";
 import Search from "antd/lib/input/Search";
 import { useEffect, useState } from "react";
 import { UserService } from "../services/userService";
 import { Table as AntTable } from "antd";
+import moment from "moment";
 interface TableType {
   index: string;
   name: string;
@@ -14,7 +15,12 @@ interface TableType {
 }
 export default function Table() {
   const sendEdit = (record: TableType) => {
-    UserService.update(record.name, record.password, record.email, record.birthday, record.money  )
+    UserService.update(
+      record.name,
+      record.password,
+      record.email,
+      moment(record.birthday),
+      record.money
     );
   };
 
@@ -23,51 +29,28 @@ export default function Table() {
       title: "修改内容",
       content: (
         <Form>
-          {Object.keys(record)}
-          <Form.Item label="姓名" name={"name"}>
-            <Input
-              value={record.name}
-              onChange={(event) => {
-                record.name = event.target.value;
-              }}
-            />
+          <Form.Item label="姓名">
+            <Input defaultValue={record.name} />
           </Form.Item>
-          <Form.Item label="邮箱" name={"email"}>
-            <Input
-              value={record.email}
-              onChange={(event) => {
-                record.email = event.target.value;
-              }}
-            />
+          <Form.Item label="邮箱">
+            <Input defaultValue={record.email} />
           </Form.Item>
-          <Form.Item label="密码" name={"password"}>
-            <Input
-              value={record.email}
-              type="password"
-              onChange={(event) => {
-                record.password = event.target.value;
-              }}
-            />
+          <Form.Item label="密码">
+            <Input defaultValue={record.password} />
           </Form.Item>
-          <Form.Item label="余额" name={"money"}>
-            <Input
-              value={record.email}
-              onChange={(event) => {
-                record.money = Number.parseInt(event.target.value);
-              }}
-            />
+          <Form.Item label="余额">
+            <InputNumber defaultValue={record.money} />
           </Form.Item>
         </Form>
       ),
       onOk: () => {
-        sendEdit(record);
-      },
-      onCancel: () => {
-        setEditVisible(false);
+        // sendEdit(re!);
       },
     });
   };
-  const del = (record: TableType) => {};
+  const del = (record: TableType) => {
+    setData((data) => data.filter((item) => item.index !== record.index));
+  };
   const columns = [
     {
       title: "",

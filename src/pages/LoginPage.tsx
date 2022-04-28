@@ -8,8 +8,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const checkLogin = async () => {
-    const res = await UserService.login(id, password);
-    if (res.status == 200) {
+    if (await UserService.login(id, password)) {
+      console.log("true");
       navigate("/main");
     } else {
       alert("用户名或密码错误");

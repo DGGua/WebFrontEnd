@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import { useEffect, useState, useSyncExternalStore } from "react";
+import Pages from "../components/pages";
 import Table from "../components/table";
-import { UserService } from "../services/userService";
 import "./MainPage.scss";
 
 export default function MainPage() {
   const [theme, setTheme] = useState<"yellow" | "blue">("yellow");
+  const [comp, setComp] = useState<"main" | "table" | "pages">("main");
   const blueDark = "blue";
   const yellowDark = "orange";
   const blueLight = "cornflowerblue";
@@ -32,19 +32,28 @@ export default function MainPage() {
           }}
         >
           <ul>
-            <li>首页</li>
+            <li onClick={() => setComp("main")}>首页</li>
             <hr />
             <li onClick={() => setTheme("blue")}>深蓝</li>
             <li onClick={() => setTheme("yellow")}>橘黄</li>
             <hr />
             <li>修改密码</li>
             <hr />
-            <li>用户管理</li>
-            <li>文章管理</li>
+            <li onClick={() => setComp("table")}>用户管理</li>
+            <li onClick={() => setComp("pages")}>文章管理</li>
           </ul>
         </aside>
         <main style={{ width: "100%" }}>
-          <Table />
+          {(() => {
+            switch (comp) {
+              case "main":
+                return <p>欢迎光临~</p>;
+              case "table":
+                return <Table />;
+              case "pages":
+                return <Pages />;
+            }
+          })()}
         </main>
       </div>
       <footer
@@ -54,7 +63,7 @@ export default function MainPage() {
           backgroundColor: theme == "yellow" ? yellowDark : blueDark,
         }}
       >
-        武汉理工大学 李东哲
+        武汉理工大学
       </footer>
     </div>
   );
